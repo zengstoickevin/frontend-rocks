@@ -58,10 +58,10 @@ function getTypeColor(type: string){
 
 
 const Card = (props: PokemonCard) => {
-  return  <div className="flex flex-wrap bg-red-200 p-0.1 w-3xs">
+  return  <div className="flex flex-wrap bg-lime-200 p-0.1 w-3xs">
             {props.id} - {props.name}
             <img src = {props.image}/>
-            <div className="flex flex-wrap bg-red-200 gap-2 p-3">
+            <div className="flex flex-wrap bg-lime-200 gap-2 p-3">
               {props.types.map((type) => {
               return <div className={`p-4 ${getTypeColor(type)}`}>{type}</div>
              })}
