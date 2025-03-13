@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { PokeAPI } from "./pokeapiClient";
-
 interface PokemonCard {
   id: number;
   image: string;
@@ -8,76 +5,75 @@ interface PokemonCard {
   types: string[];
 }
 
-async function fetchData(): Promise<PokemonCard[]> {
-  const data = await PokeAPI.getPokemonsList();
-
-  const pokemons = await Promise.all(
-     data.results.map((pokemon) => {
-    return PokeAPI.getPokemonByName(pokemon.name);
-    })
-  );
-
-  return pokemons.map ((pokemon) => {
-    return {
-      id: pokemon.id,
-      name: pokemon.name,
-      image: pokemon.sprites.other["official-artwork"].front_default ?? "",
-      types: pokemon.types.map((t) => t.type.name),
-    };
-
-   
-  });
-}
+const data: PokemonCard[] = [
+  {
+    id: 1,
+    name: "Geodude",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    types: ["fire", "water"],
+  },
+  {
+    id: 2,
+    name: "Pikachu",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    types: ["electric"], // Corretto "Elettric" in "electric"
+  },
+  {
+    id: 3,
+    name: "Bubs",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    types: ["fire", "water"],
+  },
+  {
+    id: 4,
+    name: "Bubs",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    types: ["fire", "water"],
+  },
+  {
+    id: 5,
+    name: "Squirtle",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    types: ["water"],
+  },
+  {
+    id: 6,
+    name: "Charmander",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    types: ["fire"],
+  },
+];
 
 const typeColors: { [key: string]: string } = {
   fire: "bg-red-500",
   water: "bg-blue-500",
-  poison: "bg-purple-500"
-}; 
-function getTypeColor(type: string) {
-  const color = typeColors[type];
-  return color;
-}
+  electric: "bg-yellow-500",
+};
 
-const Card = (props: PokemonCard) => {
-  return  <div className="bg-white w-2xs">
-            {props.id} - {props.name}
-            <img src = {props.image}/>
-            <div className="flex justify-center gap-4 p-4">
-              {props.types.map((type) => {
-              return <div className={`p-4 ${getTypeColor(type)}`}>{type}</div>
-             })}
-            </div>
-          </div>
+function getTypeColor(type: string) {
+  return typeColors[type] || "bg-gray-400"; // Colore di fallback
 }
 
 export const App = () => {
-  const [data, setData] = useState<PokemonCard[]>([]);
-
-  useEffect(() => {
-    fetchData().then((result) => {
-      setData(
-        result.map((item) => ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-          types: item.types,
-        }))
-      );
-    });
-  }, []);
-
   return (
-  <div>
-    <div className="flex flex-wrap gap-4 p-4">
-      {data.map ((item) => {
-        return <Card id={item.id} name={item.name} image={item.image} types={item.types} />
-      })}
+    <div className="flex flex-wrap gap-4 p-4 bg-sky-200">
+      {data.map((item) => (
+        <div key={item.id} className="bg-white p-4 shadow-md rounded-lg w-40 text-center">
+          <h3 className="text-lg font-bold">{item.id} - {item.name}</h3>
+          <img src={item.image} alt={item.name} className="w-full h-32 object-contain" />
+          <div className="flex justify-center gap-2 mt-2">
+            {item.types.map((type) => (
+              <div key={type} className={`px-2 py-1 rounded ${getTypeColor(type)}`}>
+                {type}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
-  </div>
   );
 };
 
 export const Detail = () => {
-  return null
-}
+  return null;
+};
